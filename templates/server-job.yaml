@@ -87,7 +87,7 @@ spec:
         - name: create-{{ $store }}-store
           image: "{{ $.Values.admintools.image.repository }}:{{ $.Values.admintools.image.tag }}"
           imagePullPolicy: {{ $.Values.admintools.image.pullPolicy }}
-          command: ['sh', '-c', 'temporal-sql-tool create-database -database {{ include "temporal.persistence.sql.database" (list $ $store) }}']
+          command: ['sh', '-c', 'temporal-sql-tool -database {{ include "temporal.persistence.sql.database" (list $ $store) }} create-database ']
           env:
             - name: SQL_PLUGIN
               value: {{ include "temporal.persistence.sql.driver" (list $ $store) }}
