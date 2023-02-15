@@ -110,6 +110,10 @@ spec:
               value: {{ $storeConfig.sql.password }}
               {{- end }}
             {{- end }}
+          volumeMounts:
+            {{- if $.Values.server.additionalVolumeMounts }}
+            {{- toYaml $.Values.server.additionalVolumeMounts | nindent 12}}
+            {{- end }}
         {{- end }}
         {{- end }}
         {{- else }}
@@ -170,12 +174,20 @@ spec:
               {{- end }}
             {{- end }}
             {{- end }}
+          volumeMounts:
+            {{- if $.Values.server.additionalVolumeMounts }}
+            {{- toYaml $.Values.server.additionalVolumeMounts | nindent 12}}
+            {{- end }}
         {{- end }}
       {{- with $.Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with (default $.Values.server.nodeSelector) }}
+      volumes:
+        {{- if $.Values.server.additionalVolumes }}
+        {{- toYaml $.Values.server.additionalVolumes | nindent 8}}
+        {{- end }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -301,6 +313,14 @@ spec:
               {{- end }}
             {{- end }}
             {{- end }}
+          volumeMounts:
+            {{- if $.Values.server.additionalVolumeMounts }}
+            {{- toYaml $.Values.server.additionalVolumeMounts | nindent 12}}
+            {{- end }}
+        {{- end }}
+      volumes:
+        {{- if $.Values.server.additionalVolumes }}
+        {{- toYaml $.Values.server.additionalVolumes | nindent 8}}
         {{- end }}
       {{- with (default $.Values.admintools.nodeSelector) }}
       nodeSelector:
