@@ -87,7 +87,7 @@ spec:
         - name: create-{{ $store }}-store
           image: "{{ $.Values.admintools.image.repository }}:{{ $.Values.admintools.image.tag }}"
           imagePullPolicy: {{ $.Values.admintools.image.pullPolicy }}
-          command: ['sh', '-c', 'temporal-sql-tool -database {{ include "temporal.persistence.sql.database" (list $ $store) }} create-database ']
+          command: ['sh', '-c', 'temporal-sql-tool create-database']
           env:
             - name: SQL_PLUGIN
               value: {{ include "temporal.persistence.sql.driver" (list $ $store) }}
@@ -95,6 +95,8 @@ spec:
               value: {{ include "temporal.persistence.sql.host" (list $ $store) }}
             - name: SQL_PORT
               value: {{ include "temporal.persistence.sql.port" (list $ $store) | quote }}
+            - name: SQL_DATABASE
+              value: {{ include "temporal.persistence.sql.database" (list $ $store) }}
             {{- if $storeConfig.sql.user }}
             - name: SQL_USER
               value: {{ $storeConfig.sql.user }}
@@ -109,6 +111,12 @@ spec:
               {{- else }}
               value: {{ $storeConfig.sql.password }}
               {{- end }}
+            {{- end }}
+            {{- if $storeConfig.sql.tls.enabled }}
+            - name: SQL_TLS
+              value: {{ $storeConfig.sql.tls.enabled | quote }}
+            - name: SQL_TLS_CA_FILE
+              value: {{ $storeConfig.sql.tls.caFile }}
             {{- end }}
           volumeMounts:
             {{- if $.Values.server.additionalVolumeMounts }}
@@ -172,6 +180,12 @@ spec:
               {{- else }}
               value: {{ $storeConfig.sql.password }}
               {{- end }}
+            {{- end }}
+            {{- if $storeConfig.sql.tls.enabled }}
+            - name: SQL_TLS
+              value: {{ $storeConfig.sql.tls.enabled | quote }}
+            - name: SQL_TLS_CA_FILE
+              value: {{ $storeConfig.sql.tls.caFile }}
             {{- end }}
             {{- end }}
           volumeMounts:
@@ -311,6 +325,12 @@ spec:
               {{- else }}
               value: {{ $storeConfig.sql.password }}
               {{- end }}
+            {{- end }}
+            {{- if $storeConfig.sql.tls.enabled }}
+            - name: SQL_TLS
+              value: {{ $storeConfig.sql.tls.enabled | quote }}
+            - name: SQL_TLS_CA_FILE
+              value: {{ $storeConfig.sql.tls.caFile }}
             {{- end }}
             {{- end }}
           volumeMounts:
